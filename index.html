@@ -34,11 +34,13 @@ header input[type=date]{font:inherit;background:#203A3E;color:#EAF2F4;border:1px
 #views{position:absolute;top:10px;left:max(10px,env(safe-area-inset-left,0px));display:flex;flex-wrap:wrap;gap:4px;z-index:2}
 #views button,#tools button{font:inherit;font-size:11.5px;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:3px;padding:4px 8px;cursor:pointer}
 #views button:hover,#tools button:hover{border-color:var(--accent)}
-#tools{position:absolute;bottom:10px;z-index:3;left:max(10px,env(safe-area-inset-left,0px));display:flex;flex-wrap:wrap;gap:4px;z-index:2}
+#tools{position:absolute;bottom:10px;z-index:3;left:max(10px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;align-items:stretch;gap:4px;z-index:2}
 #tools label{font-size:11.5px;background:var(--panel);border:1px solid var(--line);border-radius:3px;padding:3px 8px;display:flex;align-items:center;gap:5px;cursor:pointer}
 #tip{position:absolute;pointer-events:none;background:#112528;color:#EAF2F4;font-size:11.5px;padding:4px 7px;border-radius:3px;z-index:3;display:none;white-space:nowrap;font-family:var(--mono)}
 #axis{position:absolute;right:10px;top:10px;font-family:var(--mono);font-size:10.5px;color:var(--ink2);background:var(--panel);border:1px solid var(--line);padding:3px 6px;border-radius:3px;z-index:2}
 aside{width:360px;flex:0 0 360px;background:var(--panel);border-left:1px solid var(--line);overflow:auto;padding-block:12px;padding-left:14px;padding-right:max(14px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:14px;min-width:0}
+.basis summary{font-size:10.5px;text-transform:uppercase;letter-spacing:.09em;color:var(--mute);font-weight:600;cursor:pointer;list-style-position:inside}
+.basis[open] summary{margin-bottom:6px}
 aside h2{font-size:10.5px;text-transform:uppercase;letter-spacing:.09em;color:var(--mute);margin:0 0 6px;font-weight:600}
 .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .kpi{border:1px solid var(--line);border-radius:4px;padding:8px 10px;background:var(--bg)}
@@ -94,6 +96,7 @@ select.NS{border-left:4px solid var(--ns)} select.IP{border-left:4px solid var(-
 .toast{position:absolute;left:50%;top:14px;transform:translateX(-50%);background:#112528;color:#EAF2F4;padding:6px 12px;border-radius:3px;font-size:12px;z-index:9;display:none}
 @media (max-width:820px){
   #axis{display:none}
+  #tools{flex-direction:row;flex-wrap:wrap;right:10px}
   #main{flex-direction:column}
   #stage{flex:0 0 52vh}
   aside{width:auto;flex:1;border-left:0;border-top:1px solid var(--line);padding-left:max(14px,env(safe-area-inset-left,0px))}
@@ -221,7 +224,6 @@ select.NS{border-left:4px solid var(--ns)} select.IP{border-left:4px solid var(-
     <section>
       <h2>Element colour</h2>
       <div class="legend" id="legend" style="display:grid;grid-template-columns:1fr;gap:3px"></div>
-      <div class="note" style="margin-top:4px">Colour follows steel fixing → formwork → concrete on each element; solid = complete, hatched = in progress. Once concrete is cast the element stays green. Blinding and mass concrete are part of the base slab element; shoring and backfill carry no colour.</div>
     </section>
     <section>
       <h2>Work groups (click to hide / show)</h2>
@@ -232,8 +234,8 @@ select.NS{border-left:4px solid var(--ns)} select.IP{border-left:4px solid var(-
       <div id="sel"><div class="empty">Click any element in the model. Hover shows its ID and status.</div></div>
     </section>
     <section>
-      <h2>Modelling basis</h2>
-      <div class="note">Retaining-wall segments (RWL7, RWL6, RWR5–7) have a base slab under each wall only — the road between them is on fill, no full-width slab. Segment split, chainages, joints (EJ / PCJ) and wall / slab dimensions per GA 100101 and schedule of concrete dimension 100107. Box: 2 cells × 14.95 m, outer walls 1.20 m, centre wall 0.80 m, base 1.50 m, top 1.20 m, top slab 65.25 m (CH 649.997–715.247), base 79.76 m. Levels are relative to top of wall (0.00); road depth derived from schedule wall heights — highway profile AL_ATRD_PR_MR_01 not in the set. U-section clear width modelled 29.60 m constant (drawing: 29.60–30.70). Activity list per construction sequence 000013, RFT / FW / concrete split.</div>
+      <details class="basis"><summary>Modelling basis</summary>
+      <div class="note">Retaining-wall segments (RWL7, RWL6, RWR5–7) have a base slab under each wall only — the road between them is on fill, no full-width slab. Segment split, chainages, joints (EJ / PCJ) and wall / slab dimensions per GA 100101 and schedule of concrete dimension 100107. Box: 2 cells × 14.95 m, outer walls 1.20 m, centre wall 0.80 m, base 1.50 m, top 1.20 m, top slab 65.25 m (CH 649.997–715.247), base 79.76 m. Levels are relative to top of wall (0.00); road depth derived from schedule wall heights — highway profile AL_ATRD_PR_MR_01 not in the set. U-section clear width modelled 29.60 m constant (drawing: 29.60–30.70). Activity list per construction sequence 000013, RFT / FW / concrete split.</div></details>
     </section>
   </aside>
 </div>
