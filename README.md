@@ -12,5 +12,6 @@ Live site: https://nanda51014.github.io/Taawun-Underpass-3D-Progress/
 | Rev | Date | File |
 |---|---|---|
 | Rev0 | 05-Nov-26 | [Taawun_Underpass_3D_Progress_Model-Rev0-05-Nov-26.html](Taawun_Underpass_3D_Progress_Model-Rev0-05-Nov-26.html) |
+| Rev1 | 09-Nov-26 | [Taawun_Underpass_3D_Progress_Model-Rev1-09-Nov-26.html](Taawun_Underpass_3D_Progress_Model-Rev1-09-Nov-26.html) — stage colours simplified to steel fixing / formwork / concrete (hatched = in progress), draggable labels with reset, unweighted KPI and segment panels removed |
 
 Status edits made in the browser are saved only in that viewer's browser (localStorage). To publish new statuses for everyone, update the HTML and push it.
