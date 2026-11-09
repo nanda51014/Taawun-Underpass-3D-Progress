@@ -1,0 +1,35 @@
+rules_version = '2';
+// Security rules for the Taawun Underpass 3D Progress Model.
+// Paste into Firebase console > Firestore Database > Rules, then Publish.
+//  - Anyone with the site link can READ the shared statuses.
+//  - Only signed-in users whose UID has a document in "editors" can CHANGE them.
+//  - The change log is append-only (no edits, no deletes) and visible to editors only.
+//  - The editors list itself can only be changed from the Firebase console.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isEditor() {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/editors/$(request.auth.uid));
+    }
+
+    match /editors/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow write: if false;
+    }
+
+    match /projects/{projectId} {
+      allow read: if true;
+      allow create, update: if isEditor()
+        && request.resource.data.keys().hasOnly(['statuses', 'cutoff', 'updatedAt', 'updatedBy'])
+        && request.resource.data.updatedBy == request.auth.token.email;
+      allow delete: if false;
+
+      match /log/{entryId} {
+        allow read: if isEditor();
+        allow create: if isEditor() && request.resource.data.by == request.auth.token.email;
+        allow update, delete: if false;
+      }
+    }
+  }
+}
