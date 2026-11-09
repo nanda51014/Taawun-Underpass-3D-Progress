@@ -36,17 +36,21 @@ What the rules do:
 4. Recommended: **Settings** tab → **User actions** → untick **Enable create (sign-up)** → Save. This stops strangers creating accounts. They couldn't edit anyway without step 6, but this keeps the user list clean.
 
 ## 5. Create the editor accounts
-1. Authentication → **Users** tab → **Add user** → enter the editor's email and a temporary password → **Add user**.
-2. In the user list, copy that person's **User UID** (the long code).
-3. Repeat for each editor. Create your own account first.
+1. Authentication → **Users** tab → **Add user**.
+2. Enter **`username@taawun.local`** as the email, e.g. `ahmed@taawun.local`. Use lower case and no spaces. Then set a password → **Add user**.
+3. In the user list, copy that person's **User UID** (the long code).
+4. Repeat for each editor.
 
-Editors can change their password with the **Forgot password?** link on the site's sign-in box.
+On the site they sign in with just the username (`ahmed`, any case) and the password. The site adds `@taawun.local` itself. The address is never emailed, so no real email is needed.
+
+- **Forgotten password:** a username account has no mailbox, so you reset it. In Authentication → Users, delete the user, add them again with a new password, then update their `editors` document to the new UID.
+- **Real email accounts** (like yours) still work. Type the full email to sign in, and **Forgot password?** emails a reset link.
 
 ## 6. Give each account edit rights
 1. Firestore Database → **Data** tab → **Start collection**.
 2. Collection ID: `editors` → Next.
 3. Document ID: **paste the User UID** from step 5.
-4. Add a field: name `email`, type `string`, value = their email (this is only so you can tell who is who) → **Save**.
+4. Add a field: name `email`, type `string`, value = their username or email (this is only so you can tell who is who) → **Save**.
 5. For each further editor: inside `editors` → **Add document** → same steps.
 
 To remove an editor later, delete their document in `editors` and disable the user under Authentication.
@@ -75,7 +79,7 @@ Either **send the config block to Claude** and it will commit it, or do it yours
 3. **Commit changes**. The site updates in 1–2 minutes.
 
 ## 9. First sign-in
-1. Open <https://nanda51014.github.io/Taawun-Underpass-3D-Progress/> → **Sign in to edit** (top right) → your editor email and password.
+1. Open <https://nanda51014.github.io/Taawun-Underpass-3D-Progress/> → **Sign in to edit** (top right) → your username (or email) and password.
 2. On this first editor sign-in, the database is filled with the statuses published in `index.html`. The header then shows **Shared statuses · last update … by …**.
 3. If you had already entered statuses in your own browser before switching on: before step 8, open **Progress register → Import / export JSON → Export JSON**. After you sign in, paste it back and press **Apply pasted JSON**. That pushes those statuses to everyone.
 

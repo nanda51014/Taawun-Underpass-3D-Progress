@@ -16,6 +16,11 @@
   if (!CFG || !CFG.apiKey || /PASTE|YOUR_/i.test(CFG.apiKey)) return; // local-only mode
 
   var DOC_PATH = window.FIREBASE_PROJECT_DOC || 'projects/taawun-underpass';
+  // Username sign-in: "ahmed" is stored in Firebase Authentication as "ahmed@taawun.local".
+  // The address is never emailed; it only satisfies Firebase's email/password format.
+  var USER_DOMAIN = window.FIREBASE_USER_DOMAIN || 'taawun.local';
+  function toLogin(v) { v = v.trim(); return v.indexOf('@') < 0 ? v.toLowerCase() + '@' + USER_DOMAIN : v; }
+  function shortName(em) { var sfx = '@' + USER_DOMAIN; return em && em.slice(-sfx.length) === sfx ? em.slice(0, -sfx.length) : em; }
   var SDK = 'https://www.gstatic.com/firebasejs/10.12.2/';
   var $ = function (id) { return document.getElementById(id); };
 
@@ -84,7 +89,7 @@
     else if (user) { btn.textContent = 'Sign out'; btn.className = 'ghost'; }
     else { btn.textContent = 'Sign in to edit'; btn.className = ''; }
     if (!synced && !docMissing) return;
-    var who = user ? (isEditor ? ' · editing as ' + user.email : ' · ' + user.email + ' is not an editor (view only)') : ' · view only';
+    var who = user ? (isEditor ? ' · editing as ' + shortName(user.email) : ' · ' + shortName(user.email) + ' is not an editor (view only)') : ' · view only';
     if (docMissing) setPill('Shared database is empty' + (isEditor ? ' - initialising...' : ' - an editor must sign in once to initialise it') + who, 'err');
     else setPill('Shared statuses' + lastMeta + who, 'live');
   }
@@ -131,7 +136,7 @@
   function openLogin() {
     var dlg = document.createElement('div');
     dlg.id = 'cl-dlg';
-    dlg.innerHTML = '<form><h3>Editor sign-in</h3><input type="email" id="cl-em" placeholder="Email" autocomplete="username" required>' +
+    dlg.innerHTML = '<form><h3>Editor sign-in</h3><input type="text" id="cl-em" placeholder="Username (or email)" autocomplete="username" autocapitalize="none" spellcheck="false" required>' +
       '<input type="password" id="cl-pw" placeholder="Password" autocomplete="current-password" required><div class="msg" id="cl-msg"></div>' +
       '<div class="row"><a id="cl-fg">Forgot password?</a><button type="button" id="cl-cx">Cancel</button><button class="p" type="submit">Sign in</button></div></form>';
     document.body.appendChild(dlg);
@@ -140,15 +145,16 @@
     $('cl-cx').onclick = close;
     dlg.addEventListener('click', function (e) { if (e.target === dlg) close(); });
     $('cl-fg').onclick = function () {
-      var em = $('cl-em').value.trim();
-      if (!em) { $('cl-msg').textContent = 'Type your email first.'; return; }
+      var raw = $('cl-em').value.trim(), em = toLogin(raw);
+      if (!raw) { $('cl-msg').textContent = 'Type your username or email first.'; return; }
+      if (shortName(em) !== em) { $('cl-msg').textContent = 'Username accounts have no mailbox - ask the site admin to reset your password.'; return; }
       auth.sendPasswordResetEmail(em).then(function () { $('cl-msg').style.color = '#2E9E5B'; $('cl-msg').textContent = 'Reset email sent.'; })
         .catch(function (err) { $('cl-msg').textContent = err.message; });
     };
     dlg.querySelector('form').addEventListener('submit', function (e) {
       e.preventDefault();
       $('cl-msg').textContent = '';
-      auth.signInWithEmailAndPassword($('cl-em').value.trim(), $('cl-pw').value).then(close)
+      auth.signInWithEmailAndPassword(toLogin($('cl-em').value), $('cl-pw').value).then(close)
         .catch(function () { $('cl-msg').textContent = 'Sign-in failed - check email and password.'; });
     });
   }
@@ -185,7 +191,7 @@
         if (d.cutoff) cutEl.value = d.cutoff;
         synced = exportState(); syncedCut = cutEl.value;
         var st = fmtStamp(d.updatedAt);
-        lastMeta = st ? ' · last update ' + st + (d.updatedBy ? ' by ' + d.updatedBy : '') : '';
+        lastMeta = st ? ' · last update ' + st + (d.updatedBy ? ' by ' + shortName(d.updatedBy) : '') : '';
         refreshUI(); updatePill();
       }, function (err) {
         setPill('Cannot read shared statuses (' + err.code + ') - showing published statuses', 'err');
