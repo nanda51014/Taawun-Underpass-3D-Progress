@@ -421,7 +421,7 @@ function drawLabels(ctx,W,H,cam){
       const up = L.kind==='seg'; if(!up){ nx=-nx; ny=-ny; }
       const off = H*(up?0.13:0.115);
       it.dx=dx; it.dy=dy; it.nx=nx; it.ny=ny; it.cx=ax+nx*off; it.cy=ay+ny*off; it.leader=true;
-      if(L.off){ it.cx=ax+L.off.x*H; it.cy=ay+L.off.y*H; it.fixed=true; }
+      if(L.off&&ctx===lblCtx){ it.cx=ax+L.off.x*H; it.cy=ay+L.off.y*H; it.fixed=true; } // dragged positions apply on screen only; print pack uses the automatic layout
     } else { it.cx=Math.min(W-bw/2-3,Math.max(bw/2+3,ax)); }
     items.push(it);
   });
