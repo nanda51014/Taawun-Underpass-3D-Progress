@@ -94,10 +94,11 @@ Either **send the config block to Claude** and it will commit it, or do it yours
 
 - **Audit trail:** each save writes an entry to `projects/taawun-underpass/log` with the time, the editor's email and each activity's before → after. You can view it in Firestore → Data.
 - **Source of truth:** once switched on, the database statuses override the statuses inside `index.html`. Elements added in a new revision of the model start from the statuses in the file until someone edits them.
-- **New revisions of `index.html`:** keep these two lines just before `</body>`, or the site falls back to browser-only mode:
+- **New revisions of `index.html`:** keep these lines just before `</body>` (the first two run the shared database, the third the DXF export):
   ```html
   <script src="firebase-config.js"></script>
   <script src="cloud-sync.js"></script>
+  <script src="dxf-export.js"></script>
   ```
 - In shared mode, the register's "Reset to published statuses" button becomes **"Discard unsaved / reload shared statuses"**, so nobody can wipe everyone's data with one click.
 
